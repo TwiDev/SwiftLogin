@@ -1,0 +1,64 @@
+#   _____              _    __   _     _                        _
+#  / ____|            (_)  / _| | |   | |                      (_)
+# | (___   __      __  _  | |_  | |_  | |        ___     __ _   _   _ __
+#  \___ \  \ \ /\ / / | | |  _| | __| | |       / _ \   / _` | | | | '_ \
+#  ____) |  \ V  V /  | | | |   | |_  | |____  | (_) | | (_| | | | | | | |
+# |_____/    \_/\_/   |_| |_|    \__| |______|  \___/   \__, | |_| |_| |_|
+#                                                        __/ |
+#                                                       |___/
+
+
+
+errorUserNotExists: "&aThis user does not exist"
+
+errorRegisterPremium: "&a&lSwiftLogin &8&l» &cYou cannot register as a premium player"
+errorAlreadyRegistered: "&a&lSwiftLogin &8&l» &cYou are already registered"
+errorRegisterUsage: "&a&lSwiftLogin &8&l» &cPlease use /register <password> <captcha>"
+
+errorLoginPremium: "&a&lSwiftLogin &8&l» &cYou cannot log in this way as a premium player"
+errorAlreadyLogged: "&a&lSwiftLogin &8&l» &cYou are already connected"
+errorNotRegistered: "&a&lSwiftLogin &8&l» &cYou must first register with the /register command"
+errorLoginUsage: "&a&lSwiftLogin &8&l» &cPlease use /login <your password>"
+errorIncorrectPassword: "&a&lSwiftLogin &8&l» &cYour password is incorrect"
+
+authorizationSuccessRegister_message: "Register success!"
+authorizationSuccessRegister_title: "&a&lRegistered"
+authorizationSuccessRegister_subtitle: "&7You have been successfully registered"
+authorizationSuccessRegister_fadeIn: 20
+authorizationSuccessRegister_stay: 40
+authorizationSuccessRegister_fadeOut: 20
+
+authorizationSuccessLogin_message: "Login success!"
+authorizationSuccessLogin_title: "&a&lLogged In"
+authorizationSuccessLogin_subtitle: "&7You have been successfully logged in"
+authorizationSuccessLogin_fadeIn: 20
+authorizationSuccessLogin_stay: 40
+authorizationSuccessLogin_fadeOut: 20
+
+authorizationPremium_message: "&aPremium Session"
+authorizationPremium_title: "&a&lPremium"
+authorizationPremium_subtitle: "&7You have been automatically connected"
+authorizationPremium_fadeIn: 20
+authorizationPremium_stay: 40
+authorizationPremium_fadeOut: 20
+
+authorizationCracked_message: "&aSession valid success!"
+authorizationCracked_title: "&a&lLogged In"
+authorizationCracked_subtitle: "&7You have been automatically connected"
+authorizationCracked_fadeIn: 20
+authorizationCracked_stay: 40
+authorizationCracked_fadeOut: 20
+
+requireRegister_message: "Require Register"
+requireRegister_title: "&6&lPlease Register"
+requireRegister_subtitle: "&7/register <password> <captcha>"
+requireRegister_fadeIn: 20
+requireRegister_stay: 9999
+requireRegister_fadeOut: 20
+
+requireLogin_message: "Require Login"
+requireLogin_title: "&6&lPlease Login"
+requireLogin_subtitle: "&7/login <password>"
+requireLogin_fadeIn: 20
+requireLogin_stay: 9999
+requireLogin_fadeOut: 20

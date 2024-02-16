@@ -1,0 +1,60 @@
+#   _____              _    __   _     _                        _
+#  / ____|            (_)  / _| | |   | |                      (_)
+# | (___   __      __  _  | |_  | |_  | |        ___     __ _   _   _ __
+#  \___ \  \ \ /\ / / | | |  _| | __| | |       / _ \   / _` | | | | '_ \
+#  ____) |  \ V  V /  | | | |   | |_  | |____  | (_) | | (_| | | | | | | |
+# |_____/    \_/\_/   |_| |_|    \__| |______|  \___/   \__, | |_| |_| |_|
+#                                                        __/ |
+#                                                       |___/
+
+
+# Plugin Token
+token: 'TOKEN'
+
+authorizedHostnames: []
+
+# Mysql Database
+
+mysqlHost: 'localhost'
+mysqlPort: 3306
+mysqlDatabase: 'swiftlogin'
+mysqlUser: 'root'
+mysqlPassword: ''
+mysqlProperties: [useSSL=true, verifyServerCertificate=true]
+
+# Mysql Pool settings
+poolSize: 10
+poolIdle: 10
+poolTimeout: 5000
+poolLifetime: 1800000
+
+# Main Servers
+mainServers: [main]
+
+# Login Servers
+limboServers: [limbo]
+
+# Login Settings
+registerPremium: true
+
+wrongPasswordDisconnection: false
+
+limboDisconnectRedirection: true
+
+lastServerRedirection: false
+
+verifyCaptchaCode: true
+
+confirmPassword: false
+
+maximumProfilesPerAddress: 2
+
+maximumAuthorisationTime: 90
+
+sessionTime: 10
+
+passwordHashingType: BCRYPT
+
+safePasswordPattern: '[\S]{6,25}'
+
+authorizedCommands: [login, register, l]

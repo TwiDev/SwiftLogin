@@ -1,0 +1,4 @@
+name: SwiftLogin
+version: 1.0.0
+author: TwiDev
+main: ch.twidev.swiftlogin.bungee.SwiftLoginBungee

@@ -1,0 +1,7 @@
+name: SwiftLogin
+author: TwiDev
+version: 1.0.0
+main: ch.twidev.swiftlogin.spigot.SwiftLoginSpigot
+
+depend:
+  - ProtocolLib
