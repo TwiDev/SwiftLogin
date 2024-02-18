@@ -25,3 +25,16 @@
 ## What is SwiftLogin ?
 
 In working...
+
+&nbsp;
+## SwiftLogin API Usage
+
+Maven Repository
+
+```xml
+<dependency>
+  <groupId>ch.twidev.swiftlogin</groupId>
+  <artifactId>swiftlogin-api</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
