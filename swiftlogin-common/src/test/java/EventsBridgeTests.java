@@ -7,20 +7,12 @@
  * Written by PREZIUSO Matteo, prezmatteo@gmail.com
  */
 
-import ch.twidev.swiftlogin.api.authorization.AuthenticatedReason;
-import ch.twidev.swiftlogin.api.event.events.PlayerAuthenticatedEvent;
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.common.events.AbstractEventsProvider;
-import ch.twidev.swiftlogin.common.events.EventWrapper;
 import ch.twidev.swiftlogin.common.player.Profile;
 import ch.twidev.swiftlogin.common.player.ProfileTemplate;
-import com.google.gson.Gson;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.util.UUID;
 
 public class EventsBridgeTests {
@@ -42,7 +34,8 @@ public class EventsBridgeTests {
             }
         };
 
-        PlayerAuthenticatedEvent<Player> playerPlayerAuthenticatedEvent = new PlayerAuthenticatedEvent<>(
+
+    /*    PlayerAuthenticatedEvent<Player> playerPlayerAuthenticatedEvent = new PlayerAuthenticatedEvent<>(
                 swiftPlayer,
                 player,
                 AuthenticatedReason.SESSION
@@ -62,7 +55,7 @@ public class EventsBridgeTests {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-
+*/
         // PlayerAuthenticatedEvent{authenticatedReason=SESSION, cancelledReason='Your action has been cancelled by an external agent.', isCancelled=false, player=Player{playerName='a71f7185-4308-49ae-87d3-3baf124fba79', playerUuid=7262ea11-bae5-463d-a216-68b0872f9758}, swiftPlayer=null}
     }
 

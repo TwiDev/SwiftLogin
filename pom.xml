@@ -36,6 +36,22 @@
         <global.version>1.0.1</global.version>
     </properties>
 
+    <developers>
+        <developer>
+            <id>TwiDev</id>
+            <name>Matteo Preziuso</name>
+            <email>prezmatteo@gmail.com</email>
+            <roles>
+                <role>
+                    Software Engineer
+                </role>
+            </roles>
+            <timezone>(UTC+01:00)</timezone>
+            <organization>SwiftLogin</organization>
+            <url>https://twidev.ch</url>
+        </developer>
+    </developers>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
