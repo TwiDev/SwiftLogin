@@ -169,6 +169,11 @@ public abstract class SQLTableTemplate<E> {
         }
     }
 
+    public void delete() {
+        connection.asyncExecute("DELETE FROM " + this.getTableName()
+                + " WHERE " + this.getPrimaryKey() + " = ?", primaryValue);
+    }
+
     public boolean isExists() {
         return exists;
     }

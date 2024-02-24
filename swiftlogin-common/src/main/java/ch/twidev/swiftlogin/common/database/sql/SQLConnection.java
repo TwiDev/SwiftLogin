@@ -70,6 +70,8 @@ public class SQLConnection extends Driver<HikariDataSource> {
             if(this.isConnected()) {
                 this.logs.info("Connected to MySQL with HikariCP!");
 
+                // Creating default SQL tables
+
                 SQLManager.createTableTemplate(this, ProfileTemplate.class);
             }else{
                 this.logs.sendRawPluginError(PluginIssues.DATABASE_ACCESS_DENIED);
