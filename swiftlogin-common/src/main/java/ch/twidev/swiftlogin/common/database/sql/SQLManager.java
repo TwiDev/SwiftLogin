@@ -176,7 +176,6 @@ public class SQLManager<V, E extends SQLTableTemplate<V>> {
     public E get(String query, Object... args) {
         connection.query("SELECT * FROM " + template.getTableName()
                 + " " + query, response -> {
-
             try {
                 if(response.next()) {
                     template.populate(response);

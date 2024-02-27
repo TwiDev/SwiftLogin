@@ -24,14 +24,16 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unchecked")
 public abstract class SQLTableTemplate<E> {
 
     private static final Logger log = new SwiftLogger("TableTemplate");
 
     private final String tableName, primaryKey;
 
+    private final Class<E> primaryType;
+
     private E primaryValue;
-    private Class<E> primaryType;
 
     private boolean exists = false;
 
@@ -56,7 +58,7 @@ public abstract class SQLTableTemplate<E> {
 
     }
 
-    public static enum ColumnType {
+    public enum ColumnType {
         VARCHAR,
         TEXT,
         INT,
