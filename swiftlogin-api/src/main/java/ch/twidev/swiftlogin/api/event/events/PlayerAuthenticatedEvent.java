@@ -11,22 +11,22 @@ package ch.twidev.swiftlogin.api.event.events;
 
 import ch.twidev.swiftlogin.api.SwiftInitializer;
 import ch.twidev.swiftlogin.api.authorization.AuthenticatedReason;
-import ch.twidev.swiftlogin.api.event.SwiftCancellableEvent;
 import ch.twidev.swiftlogin.api.event.SwiftEvent;
 import ch.twidev.swiftlogin.api.event.SwiftPlayerEvent;
 import ch.twidev.swiftlogin.api.event.SwiftReasonableCancellableEvent;
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import ch.twidev.swiftlogin.api.utils.Include;
 
 @SwiftInitializer
 public class PlayerAuthenticatedEvent<P> extends SwiftPlayerEvent<P> implements SwiftReasonableCancellableEvent {
 
+    @Include
     private AuthenticatedReason authenticatedReason;
 
+    @Include
     private String cancelledReason = SwiftEvent.DEFAULT_CANCELLED_REASON;
 
+    @Include
     private boolean isCancelled = false;
 
     public PlayerAuthenticatedEvent(Class<P> player) {

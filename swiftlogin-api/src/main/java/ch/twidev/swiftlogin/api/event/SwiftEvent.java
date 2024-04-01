@@ -9,14 +9,18 @@
 
 package ch.twidev.swiftlogin.api.event;
 
+import ch.twidev.swiftlogin.api.utils.Include;
+
 public class SwiftEvent<P> {
 
     public static final String EVENTS_PACKAGE_NAME = "ch.twidev.swiftlogin.api.event.events";
 
     public static final String DEFAULT_CANCELLED_REASON = "Your action has been cancelled by an external agent.";
 
+    @Include
     private final String eventName;
 
+    @Include
     private final boolean async;
 
     public SwiftEvent() {

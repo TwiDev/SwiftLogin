@@ -11,6 +11,8 @@ package ch.twidev.swiftlogin.api.event;
 
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.api.utils.Exclude;
+import ch.twidev.swiftlogin.api.utils.Include;
+import ch.twidev.swiftlogin.api.utils.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -20,8 +22,10 @@ public class SwiftPlayerEvent<P> extends SwiftEvent<P> implements ParameterizedT
     @Exclude
     protected Class<?> playerClass;
 
+    @Include
     private SwiftPlayer swiftPlayer;
 
+    @Include
     private P player;
 
     public SwiftPlayerEvent(SwiftPlayer swiftPlayer, P player) {
@@ -37,6 +41,7 @@ public class SwiftPlayerEvent<P> extends SwiftEvent<P> implements ParameterizedT
         return swiftPlayer;
     }
 
+    @Nullable
     public P getPlayer() {
         return player;
     }

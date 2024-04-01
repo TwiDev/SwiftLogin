@@ -88,11 +88,15 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
             this.eventsProvider = new AbstractEventsProvider<>(ProxiedPlayer.class) {
                 @Override
                 public String getUniqueIdentifier(ProxiedPlayer player) {
-                    return bungeecordPlatformHandler.getPlayerUUID(player).toString();
+                    if(player == null) return null;
+                    UUID uuid = bungeecordPlatformHandler.getPlayerUUID(player);
+                    return uuid.toString();
                 }
 
                 @Override
                 public ProxiedPlayer getFromUniqueIdentifier(String s) {
+                    if(s == null) return null;
+
                     return bungeecordPlatformHandler.getPlayerFromUUID(UUID.fromString(s));
                 }
             };

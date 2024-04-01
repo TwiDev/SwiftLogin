@@ -7,16 +7,11 @@
  * Written by PREZIUSO Matteo, prezmatteo@gmail.com
  */
 
-package ch.twidev.swiftlogin.api.authorization;
+package ch.twidev.swiftlogin.api.utils;
 
-import ch.twidev.swiftlogin.api.utils.Include;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@Include
-public enum AuthenticatedReason {
-
-    LOGIN,
-    REGISTER,
-    SESSION,
-    PREMIUM
-
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Include {
 }

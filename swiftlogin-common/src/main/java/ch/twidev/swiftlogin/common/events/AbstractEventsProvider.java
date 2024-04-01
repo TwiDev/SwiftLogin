@@ -16,7 +16,7 @@ import ch.twidev.swiftlogin.api.event.SwiftEventProvider;
 import ch.twidev.swiftlogin.api.event.SwiftListener;
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.api.servers.SwiftServer;
-import ch.twidev.swiftlogin.api.utils.Exclude;
+import ch.twidev.swiftlogin.api.utils.Include;
 import ch.twidev.swiftlogin.common.SwiftLoginImplementation;
 import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.events.adapter.UniqueIdAdapter;
@@ -49,20 +49,6 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
 
     public AbstractEventsProvider(Class<P> clazz) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
-
-            final List<Class<?>> typeClass = Arrays.asList(Enum.class, String.class, Boolean.class, clazz, SwiftPlayer.class, Profile.class, SwiftServer.class, Integer.class);
-
-            @Override
-            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                return !typeClass.contains(fieldAttributes.getDeclaredType().getClass());
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return !typeClass.contains(aClass);
-            }
-        });
 
         gsonBuilder.registerTypeHierarchyAdapter(SwiftPlayer.class, new UniqueIdAdapter<SwiftPlayer>() {
             @Override
@@ -88,7 +74,7 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
             }
         });
 
-        gsonBuilder.registerTypeAdapter(clazz, new TypeAdapter<P>() {
+        gsonBuilder.registerTypeHierarchyAdapter(clazz, new TypeAdapter<P>() {
             @Override
             public void write(JsonWriter jsonWriter, P o) throws IOException {
                 jsonWriter.value(
@@ -105,7 +91,7 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
         ExclusionStrategy exclusionStrategy = new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                return fieldAttributes.getAnnotation(Exclude.class) != null;
+                return fieldAttributes.getAnnotations().stream().noneMatch(annotation -> annotation.toString().contains(Include.class.getName()));
             }
 
             @Override
