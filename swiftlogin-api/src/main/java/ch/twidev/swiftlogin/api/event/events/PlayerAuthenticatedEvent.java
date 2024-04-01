@@ -68,7 +68,7 @@ public class PlayerAuthenticatedEvent<P> extends SwiftPlayerEvent<P> implements 
                 "authenticatedReason=" + authenticatedReason +
                 ", cancelledReason='" + cancelledReason + '\'' +
                 ", isCancelled=" + isCancelled +
-                ", player=" + getPlayer().toString() +
+                ", player=" + getPlayer() +
                 ", swiftPlayer=" + getSwiftPlayer() +
                 '}';
     }

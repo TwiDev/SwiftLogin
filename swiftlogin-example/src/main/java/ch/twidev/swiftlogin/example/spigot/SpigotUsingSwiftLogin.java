@@ -42,7 +42,6 @@ public class SpigotUsingSwiftLogin extends JavaPlugin implements SwiftListener {
 
     @SwiftEventHandler
     public void onAuthenticated(PlayerAuthenticatedEvent<Player> playerPlayerAuthenticatedEvent) {
-        System.out.println(playerPlayerAuthenticatedEvent.toString());
         System.out.println(Bukkit.getPlayer(playerPlayerAuthenticatedEvent.getSwiftPlayer().getUniqueId()));
         if(playerPlayerAuthenticatedEvent.getPlayer() != null) {
             Bukkit.broadcastMessage(
