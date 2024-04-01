@@ -36,17 +36,26 @@ public class HandshakeAdapter extends PacketAdapter {
     @Override
     public void onPacketReceiving(PacketEvent event) {
         PacketContainer packetContainer = event.getPacket();
-        if(!packetContainer.getProtocols().read(0).equals(PacketType.Protocol.LOGIN)) {
-            return;
-        }
 
-        Handshaker handshaker = SwiftLoginSpigot.parseHandshake(
-                packetContainer.getStrings().read(0)
-        );
+        try {
+            if (!packetContainer.getProtocols().read(0).equals(PacketType.Protocol.LOGIN)) {
+                return;
+            }
 
-        if(handshaker != null) {
-            packetContainer.getStrings().write(0, '\u0000' + handshaker.getAddress() + '\u0000' + handshaker.getProfileUuid().toString() + '\u0000' + handshaker.getProperties());
-        }else{
+            Handshaker handshaker = SwiftLoginSpigot.parseHandshake(
+                    packetContainer.getStrings().read(0)
+            );
+
+            if (handshaker != null) {
+                packetContainer.getStrings().write(0, '\u0000' + handshaker.getAddress() + '\u0000' + handshaker.getProfileUuid().toString() + '\u0000' + handshaker.getProperties());
+            } else {
+                packetContainer.getStrings().write(0, "null");
+                PacketContainer kickPacket = new PacketContainer(PacketType.Login.Server.DISCONNECT);
+                kickPacket.getModifier().writeDefaults();
+                kickPacket.getChatComponents().write(0, WrappedChatComponent.fromText("Please join the server with correct address (2)"));
+                ProtocolLibrary.getProtocolManager().sendServerPacket(event.getPlayer(), kickPacket);
+            }
+        } catch (NullPointerException e) {
             packetContainer.getStrings().write(0, "null");
             PacketContainer kickPacket = new PacketContainer(PacketType.Login.Server.DISCONNECT);
             kickPacket.getModifier().writeDefaults();

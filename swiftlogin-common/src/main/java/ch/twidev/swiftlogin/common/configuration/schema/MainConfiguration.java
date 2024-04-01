@@ -9,8 +9,6 @@
 
 package ch.twidev.swiftlogin.common.configuration.schema;
 
-import ch.twidev.swiftlogin.common.SwiftLoginPlugin;
-import ch.twidev.swiftlogin.common.configuration.Configuration;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationHeader;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationKey;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationSide;
@@ -225,6 +223,58 @@ public class MainConfiguration {
             new StringList().append("login").append("register").append("l"),
             "Commands that are allowed while the user is not authorized."
     );
+
+    public static final ConfigurationKey<Boolean> multiInstanceSupport = new ConfigurationKey<>(
+            Boolean.class,
+            "multiInstanceSupport",
+            false,
+            "By activating this option the SwiftLogin API will be available on this server, by default the backend servers cannot access the API, " +
+                    "\nonly if the multiInstanceSupport option is activated on each of the servers on which SwiftLogin plugin is installed" +
+                    "\n" +
+                    "For more information : https://github.com/TwiDev/swiftlogin/wiki#multinstance" +
+                    "\n" +
+                    "\nTHIS OPTION REQUIRES CONFIGURING THE REDIS SECTION BELOW"
+    );
+
+    public static final ConfigurationKey<String> redisHost = new ConfigurationKey<>(
+            String.class,
+            "redisHost",
+            "127.0.0.1",
+            "This section is used to configure the redis database used to transfer SwiftLogin data across multiple instances such as multiple proxies or backend servers" +
+                    "\nErrors during plugin activation when the plugin connects to the database are always caused by misconfiguration or connection issues with " +
+                    "\nyour database. If you have a problem reporting it not to the plugin author, please see this wiki page to resolve your issue" +
+                    "\nhttps://github.com/TwiDev/swiftlogin/wiki#database-redis" +
+                    "\n" +
+                    "\nYou DO NOT NEED to configure this part to use SwiftLogin normally, this option is completely optional."
+    );
+
+    public static final ConfigurationKey<Integer> redisPort = new ConfigurationKey<>(
+            Integer.class,
+            "redisPort",
+            6379
+    );
+
+    public static final ConfigurationKey<String> redisPassword = new ConfigurationKey<>(
+            String.class,
+            "redisPassword",
+            ""
+    );
+
+    public boolean getMultiInstanceSupport() {
+        return multiInstanceSupport.getValue();
+    }
+
+    public String getRedisHost() {
+        return redisHost.getValue();
+    }
+
+    public int getRedisPort() {
+        return redisPort.getValue();
+    }
+
+    public String getRedisPassword() {
+        return redisPassword.getValue();
+    }
 
     public static String getToken() {
         return token.getValue();

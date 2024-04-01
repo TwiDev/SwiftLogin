@@ -1,4 +1,4 @@
-name: "SwiftLoginExample"
+name: SwiftLoginExample
 version: 1.0.0
 author: TwiDev
 main: ch.twidev.swiftlogin.example.bungee.BungeeUsingSwiftLogin

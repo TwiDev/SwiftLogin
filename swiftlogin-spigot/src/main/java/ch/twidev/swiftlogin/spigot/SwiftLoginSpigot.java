@@ -9,12 +9,9 @@
 
 package ch.twidev.swiftlogin.spigot;
 
-import ch.twidev.swiftlogin.api.SwiftLogin;
 import ch.twidev.swiftlogin.api.authorization.AuthorizationProvider;
 import ch.twidev.swiftlogin.api.crypto.CryptoProvider;
 import ch.twidev.swiftlogin.api.event.SwiftEventProvider;
-import ch.twidev.swiftlogin.api.exception.ServerSideNotSupportedException;
-import ch.twidev.swiftlogin.api.servers.ServerSide;
 import ch.twidev.swiftlogin.api.utils.Nullable;
 import ch.twidev.swiftlogin.common.*;
 import ch.twidev.swiftlogin.common.configuration.Configuration;
@@ -23,6 +20,7 @@ import ch.twidev.swiftlogin.common.configuration.ConfigurationHandler;
 import ch.twidev.swiftlogin.common.configuration.schema.BackendConfiguration;
 import ch.twidev.swiftlogin.common.database.DriverConfig;
 import ch.twidev.swiftlogin.common.database.DriverType;
+import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.exception.PluginConfigurationException;
 import ch.twidev.swiftlogin.common.servers.ServerType;
 import ch.twidev.swiftlogin.common.util.Empty;
@@ -34,8 +32,6 @@ import ch.twidev.swiftlogin.spigot.listeners.JoinListener;
 import ch.twidev.swiftlogin.spigot.providers.SpigotBridgeEventsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,7 +40,6 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.UUID;
@@ -127,8 +122,21 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
 
             this.spigotPlatformHandler = new SpigotPlatformHandler(this);
 
+            RedissonConnection redissonConnection = null;
+
+            if(BackendConfiguration.isMultiInstanceSupported()) {
+                DriverConfig redisConfig = new DriverConfig(
+                        DriverType.REDISSON,
+                        BackendConfiguration.getRedissonHost(),
+                        BackendConfiguration.getRedissonPort(),
+                        BackendConfiguration.getRedissonPassword()
+                );
+
+                redissonConnection = new RedissonConnection(redisConfig);
+            }
+
             try {
-                this.spigotBridgeEventsProvider = new SpigotBridgeEventsProvider(this, null);
+                this.spigotBridgeEventsProvider = new SpigotBridgeEventsProvider(this, redissonConnection);
             } catch (UnsupportedOperationException e) {
                 this.spigotBridgeEventsProvider = null;
             }
@@ -140,7 +148,8 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
                             BackendConfiguration.getMysqlDatabase(),
                             BackendConfiguration.getMysqlPort(),
                             BackendConfiguration.getMysqlUser(),
-                            BackendConfiguration.getMysqlPassword())) {
+                            BackendConfiguration.getMysqlPassword()), redissonConnection) {
+
 
                 @Override
                 public CryptoProvider getCurrentCryptoProvider() {

@@ -14,12 +14,15 @@ import ch.twidev.swiftlogin.api.authorization.AuthorizationProvider;
 import ch.twidev.swiftlogin.api.crypto.CryptoProvider;
 import ch.twidev.swiftlogin.api.crypto.CryptoType;
 import ch.twidev.swiftlogin.api.servers.SwiftServerManager;
+import ch.twidev.swiftlogin.api.utils.Nullable;
 import ch.twidev.swiftlogin.common.command.CommandProvider;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationHandler;
 import ch.twidev.swiftlogin.common.crypto.provider.BCryptProvider;
 import ch.twidev.swiftlogin.common.crypto.provider.MessageDigestProvider;
 import ch.twidev.swiftlogin.common.database.DriverConfig;
+import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.database.sql.SQLConnection;
+import ch.twidev.swiftlogin.common.exception.PluginIssues;
 import ch.twidev.swiftlogin.common.hooks.MojangManager;
 import ch.twidev.swiftlogin.common.player.ProfileFactory;
 import ch.twidev.swiftlogin.common.player.ProfileManager;
@@ -43,6 +46,7 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
     private final HashMap<CryptoType, CryptoProvider> loadedCryptoProvider = new HashMap<>();
     private final SwiftLoginPlugin<P, S> swiftLoginPlugin;
     private final SQLConnection sqlConnection;
+    private final RedissonConnection redissonConnection;
 
     private final ProfileManager profileManager;
 
@@ -59,7 +63,9 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
 
     private CommandProvider<P> commandProvider;
 
-    public SwiftLoginImplementation(SwiftLoginPlugin<P, S> swiftLoginPlugin, ConfigurationHandler configurationHandler, ServerType serverType, SwiftLogger logger, DriverConfig sqlConfig) {
+    private boolean isMultiInstanceSupported = false;
+
+    public SwiftLoginImplementation(SwiftLoginPlugin<P, S> swiftLoginPlugin, ConfigurationHandler configurationHandler, ServerType serverType, SwiftLogger logger, @Nullable DriverConfig sqlConfig, RedissonConnection redis) {
         swiftLoginImplementation = this;
 
         this.swiftLoginPlugin = swiftLoginPlugin;
@@ -68,6 +74,17 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
         this.serverType = serverType;
 
         this.sqlConnection = new SQLConnection(sqlConfig);
+        this.redissonConnection = redis;
+
+        if(redis != null) {
+            if(!redissonConnection.isConnected()) {
+                isMultiInstanceSupported = false;
+
+                logger.sendPluginError(PluginIssues.REDISSON_NOT_CONNECTED, "Cannot handle multi instances events, because redisson driver isn't connected. Please check your configuration file!");
+            }else{
+                isMultiInstanceSupported = true;
+            }
+        }
 
         this.profileManager = new ProfileManager(this.sqlConnection);
         this.profileFactory = new ProfileFactory(this.sqlConnection, profileManager);
@@ -85,6 +102,10 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
         swiftLoginPlugin.onConfigurationLoaded(this, configurationHandler);
 
         logger.info("SwiftLogin has been successfully activated!");
+    }
+
+    public boolean isMultiInstanceSupported() {
+        return isMultiInstanceSupported;
     }
 
     public void initCommands(Class<P> pClass) {

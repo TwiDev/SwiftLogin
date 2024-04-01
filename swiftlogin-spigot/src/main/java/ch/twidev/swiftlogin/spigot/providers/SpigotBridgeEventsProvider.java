@@ -34,11 +34,13 @@ public class SpigotBridgeEventsProvider extends AbstractEventsProvider<Player> {
 
         this.spigot = swiftLoginSpigot;
 
-        if(!BackendConfiguration.isMultiInstanceSupported() || redissonConnection == null) {
+        if(BackendConfiguration.isMultiInstanceSupported() && (redissonConnection == null || !redissonConnection.isConnected())) {
             swiftLoginSpigot.getSwiftLogger().sendWarningError(PluginIssues.REDISSON_NOT_CONNECTED,
                     "Cannot handle multi instances events, because redisson driver isn't connected. Please check your configuration file!");
 
             throw new UnsupportedOperationException();
+        }else if(redissonConnection == null) {
+            return;
         }
 
         redissonConnection.getConnection().getTopic(EVENT_BRIDGE_TOPIC).addListener(String.class, (charSequence, s) -> {

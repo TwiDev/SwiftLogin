@@ -21,6 +21,23 @@ public class DriverConfig {
      *
      *  Driver Configuration with credentials and database info (MySQL)
      *
+     * @param type DriverType (REDIS, ...)
+     * @param host Host name (127.0.0.1)
+     * @param port Port number
+     * @param password Password access
+     */
+    public DriverConfig(DriverType type, String host, int port, String password) {
+        this.driverType = type;
+
+        configVars.put(EnvVar.REDIS_HOST, host);
+        configVars.put(EnvVar.REDIS_PORT, port);
+        configVars.put(EnvVar.REDIS_PASSWORD, password);
+    }
+
+    /**
+     *
+     *  Driver Configuration with credentials and database info (Redis)
+     *
      * @param type DriverType (MYSQL, ...)
      * @param host Host name (127.0.0.1)
      * @param database Database name
