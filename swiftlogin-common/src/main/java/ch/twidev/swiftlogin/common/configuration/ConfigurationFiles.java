@@ -9,9 +9,15 @@
 
 package ch.twidev.swiftlogin.common.configuration;
 
+import ch.twidev.swiftlogin.common.SwiftLoginPlugin;
 import ch.twidev.swiftlogin.common.configuration.schema.BackendConfiguration;
 import ch.twidev.swiftlogin.common.configuration.schema.MainConfiguration;
 import ch.twidev.swiftlogin.common.configuration.schema.TranslationConfiguration;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 
 public enum ConfigurationFiles {
 
@@ -39,5 +45,12 @@ public enum ConfigurationFiles {
 
     public boolean isBackend() {
         return isBackend;
+    }
+
+    public void generatedExampleConfiguration(SwiftLoginPlugin<?,?> swiftLoginPlugin, Instant instant) throws Exception {
+        File file = new File("src/test/resources/"+ new SimpleDateFormat("dd-MM-yyyy_H-mm-ss").format(Date.from(instant)));
+        file.mkdir();
+
+        Configuration configuration = ConfigurationReader.loadConfiguration(swiftLoginPlugin, file, this);
     }
 }
