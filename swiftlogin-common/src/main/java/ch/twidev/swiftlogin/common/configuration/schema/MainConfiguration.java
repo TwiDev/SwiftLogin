@@ -12,6 +12,7 @@ package ch.twidev.swiftlogin.common.configuration.schema;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationHeader;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationKey;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationSide;
+import ch.twidev.swiftlogin.common.configuration.OptionalKey;
 import ch.twidev.swiftlogin.common.configuration.helpers.StringList;
 import ch.twidev.swiftlogin.common.servers.ServerComparatorStrategy;
 import ch.twidev.swiftlogin.common.util.SecureTokenGenerator;
@@ -23,7 +24,9 @@ import ch.twidev.swiftlogin.common.util.SecureTokenGenerator;
         " \\_____  \\\\ \\/ \\/ /  \\   __\\\\   __\\ |    |   /  _ \\ / ___\\|  |/    \\ \n" +
         " /        \\\\     /|  ||  |   |  |   |    |__(  <_> ) /_/  >  |   |  \\\n" +
         "/_______  / \\/\\_/ |__||__|   |__|   |_______ \\____/\\___  /|__|___|  /\n" +
-        "        \\/                                  \\/    /_____/         \\/ \n")
+        "        \\/                                  \\/    /_____/         \\/ \n" +
+        "\nConfiguration version: {version}\n"
+)
 public class MainConfiguration {
 
 
@@ -236,6 +239,7 @@ public class MainConfiguration {
                     "\nTHIS OPTION REQUIRES CONFIGURING THE REDIS SECTION BELOW"
     );
 
+    @OptionalKey
     public static final ConfigurationKey<String> redisHost = new ConfigurationKey<>(
             String.class,
             "redisHost",
@@ -248,12 +252,14 @@ public class MainConfiguration {
                     "\nYou DO NOT NEED to configure this part to use SwiftLogin normally, this option is completely optional."
     );
 
+    @OptionalKey
     public static final ConfigurationKey<Integer> redisPort = new ConfigurationKey<>(
             Integer.class,
             "redisPort",
             6379
     );
 
+    @OptionalKey
     public static final ConfigurationKey<String> redisPassword = new ConfigurationKey<>(
             String.class,
             "redisPassword",

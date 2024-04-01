@@ -127,9 +127,9 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
             if(BackendConfiguration.isMultiInstanceSupported()) {
                 DriverConfig redisConfig = new DriverConfig(
                         DriverType.REDISSON,
-                        BackendConfiguration.getRedissonHost(),
-                        BackendConfiguration.getRedissonPort(),
-                        BackendConfiguration.getRedissonPassword()
+                        BackendConfiguration.getRedisHost(),
+                        BackendConfiguration.getRedisPort(),
+                        BackendConfiguration.getRedisPassword()
                 );
 
                 redissonConnection = new RedissonConnection(redisConfig);

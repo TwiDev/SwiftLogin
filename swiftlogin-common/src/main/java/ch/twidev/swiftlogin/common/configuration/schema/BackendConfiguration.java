@@ -23,7 +23,9 @@ import ch.twidev.swiftlogin.common.util.SecureTokenGenerator;
         " \\_____  \\\\ \\/ \\/ /  \\   __\\\\   __\\ |    |   /  _ \\ / ___\\|  |/    \\ \n" +
         " /        \\\\     /|  ||  |   |  |   |    |__(  <_> ) /_/  >  |   |  \\\n" +
         "/_______  / \\/\\_/ |__||__|   |__|   |_______ \\____/\\___  /|__|___|  /\n" +
-        "        \\/                                  \\/    /_____/         \\/ \n")
+        "        \\/                                  \\/    /_____/         \\/ \n" +
+        "\nConfiguration version: {version}\n"
+)
 public class BackendConfiguration{
 
     public static final ConfigurationKey<String> TOKEN = new ConfigurationKey<>(
@@ -34,14 +36,6 @@ public class BackendConfiguration{
                     "\nwithout going through the bungeecord and bypassing security" +
                     "\nThe default token is randomly generated but if you want to modify it, choose a long and random token for the security of your server" +
                     "\nImportant : The token must be the same on each server where SwiftLogin is installed, so choose a token and copy it to the other configurations"
-    );
-
-    public static final ConfigurationKey<Boolean> MULTI_INSTANCE_SUPPORT = new ConfigurationKey<>(
-            Boolean.class,
-            "multiInstanceSupport",
-            false,
-            "By activating this option the SwiftLogin API will be available on this server, by default the backend servers cannot access the API, " +
-                    "\nonly if the multiInstanceSupport option is activated on each of the servers on which SwiftLogin plugin is installed"
     );
 
     public static final ConfigurationKey<String> MYSQL_HOST = new ConfigurationKey<>(
@@ -110,27 +104,6 @@ public class BackendConfiguration{
             1800000
     );
 
-    @OptionalKey
-    public static final ConfigurationKey<String> REDISSON_HOST = new ConfigurationKey<>(
-            String.class,
-            "redissonHost",
-            "127.0.0.1"
-    );
-
-    @OptionalKey
-    public static final ConfigurationKey<Integer> REDISSON_PORT = new ConfigurationKey<>(
-            Integer.class,
-            "redissonPort",
-            6379
-    );
-
-    @OptionalKey
-    public static final ConfigurationKey<String> REDISSON_PASSWORD = new ConfigurationKey<>(
-            String.class,
-            "redissonPassword",
-            ""
-    );
-
     public static final ConfigurationKey<Boolean> PREVENT_INTERACTION = new ConfigurationKey<>(
             Boolean.class,
             "preventInteraction",
@@ -161,6 +134,57 @@ public class BackendConfiguration{
             "A slot in the hot-bar where unregistered players get the captcha map." +
                     "\nCaptcha mode must be activated on the main proxy configuration."
     );
+
+    public static final ConfigurationKey<Boolean> multiInstanceSupport = new ConfigurationKey<>(
+            Boolean.class,
+            "multiInstanceSupport",
+            false,
+            "By activating this option the SwiftLogin API will be available on this server, by default the backend servers cannot access the API, " +
+                    "\nonly if the multiInstanceSupport option is activated on each of the servers on which SwiftLogin plugin is installed" +
+                    "\n" +
+                    "For more information : https://github.com/TwiDev/swiftlogin/wiki#multinstance" +
+                    "\n" +
+                    "\nTHIS OPTION REQUIRES CONFIGURING THE REDIS SECTION BELOW"
+    );
+
+    @OptionalKey
+    public static final ConfigurationKey<String> redisHost = new ConfigurationKey<>(
+            String.class,
+            "redisHost",
+            "127.0.0.1",
+            "This section is used to configure the redis database used to transfer SwiftLogin data across multiple instances such as multiple proxies or backend servers" +
+                    "\nErrors during plugin activation when the plugin connects to the database are always caused by misconfiguration or connection issues with " +
+                    "\nyour database. If you have a problem reporting it not to the plugin author, please see this wiki page to resolve your issue" +
+                    "\nhttps://github.com/TwiDev/swiftlogin/wiki#database-redis" +
+                    "\n" +
+                    "\nYou DO NOT NEED to configure this part to use SwiftLogin normally, this option is completely optional."
+    );
+
+    @OptionalKey
+    public static final ConfigurationKey<Integer> redisPort = new ConfigurationKey<>(
+            Integer.class,
+            "redisPort",
+            6379
+    );
+
+    @OptionalKey
+    public static final ConfigurationKey<String> redisPassword = new ConfigurationKey<>(
+            String.class,
+            "redisPassword",
+            ""
+    );
+
+    public static String getRedisHost() {
+        return redisHost.getValue();
+    }
+
+    public static int getRedisPort() {
+        return redisPort.getValue();
+    }
+
+    public static String getRedisPassword() {
+        return redisPassword.getValue();
+    }
 
     public static String getToken() {
         return TOKEN.getValue();
@@ -206,18 +230,6 @@ public class BackendConfiguration{
         return POOL_LIFETIME.getValue();
     }
 
-    public static String getRedissonHost() {
-        return REDISSON_HOST.getValue();
-    }
-
-    public static Integer getRedissonPort() {
-        return REDISSON_PORT.getValue();
-    }
-
-    public static String getRedissonPassword() {
-        return REDISSON_PASSWORD.getValue();
-    }
-
     public static boolean getPreventInteraction() {
         return PREVENT_INTERACTION.getValue();
     }
@@ -231,6 +243,8 @@ public class BackendConfiguration{
     }
 
     public static boolean isMultiInstanceSupported() {
-        return MULTI_INSTANCE_SUPPORT.getValue();
+        return multiInstanceSupport.getValue();
     }
+
+
 }

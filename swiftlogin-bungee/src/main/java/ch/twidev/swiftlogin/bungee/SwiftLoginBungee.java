@@ -85,9 +85,9 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
             if(BackendConfiguration.isMultiInstanceSupported()) {
                 DriverConfig redisConfig = new DriverConfig(
                         DriverType.REDISSON,
-                        BackendConfiguration.getRedissonHost(),
-                        BackendConfiguration.getRedissonPort(),
-                        BackendConfiguration.getRedissonPassword()
+                        BackendConfiguration.getRedisHost(),
+                        BackendConfiguration.getRedisPort(),
+                        BackendConfiguration.getRedisPassword()
                 );
 
                 redissonConnection = new RedissonConnection(redisConfig);

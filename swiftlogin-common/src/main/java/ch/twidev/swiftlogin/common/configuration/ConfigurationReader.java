@@ -9,11 +9,12 @@
 
 package ch.twidev.swiftlogin.common.configuration;
 
+import ch.twidev.swiftlogin.common.SwiftLoginImplementation;
 import ch.twidev.swiftlogin.common.SwiftLoginPlugin;
 import ch.twidev.swiftlogin.common.configuration.node.ConfigurationNode;
 import ch.twidev.swiftlogin.common.configuration.yaml.SwiftYaml;
-import ch.twidev.swiftlogin.common.exception.PluginIssues;
 import ch.twidev.swiftlogin.common.exception.PluginConfigurationException;
+import ch.twidev.swiftlogin.common.exception.PluginIssues;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -44,7 +45,7 @@ public class ConfigurationReader {
 
             String description = "";
             if(configurationFiles.getClazz().isAnnotationPresent(ConfigurationHeader.class)){
-                description = configurationFiles.getClazz().getAnnotation(ConfigurationHeader.class).description();
+                description = configurationFiles.getClazz().getAnnotation(ConfigurationHeader.class).description().replace("{version}", SwiftLoginImplementation.VERSION);
             }
 
             return SwiftYaml.saveConfiguration(
