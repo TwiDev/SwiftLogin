@@ -20,7 +20,6 @@ import ch.twidev.swiftlogin.common.configuration.ConfigurationHandler;
 import ch.twidev.swiftlogin.common.configuration.schema.BackendConfiguration;
 import ch.twidev.swiftlogin.common.database.DriverConfig;
 import ch.twidev.swiftlogin.common.database.DriverType;
-import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.exception.PluginConfigurationException;
 import ch.twidev.swiftlogin.common.servers.ServerType;
 import ch.twidev.swiftlogin.common.util.Empty;
@@ -122,24 +121,14 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
 
             this.spigotPlatformHandler = new SpigotPlatformHandler(this);
 
-            RedissonConnection redissonConnection = null;
+            DriverConfig redisConfig = new DriverConfig(
+                    DriverType.REDISSON,
+                    BackendConfiguration.getRedisHost(),
+                    BackendConfiguration.getRedisPort(),
+                    BackendConfiguration.getRedisPassword()
+            );
 
-            if(BackendConfiguration.isMultiInstanceSupported()) {
-                DriverConfig redisConfig = new DriverConfig(
-                        DriverType.REDISSON,
-                        BackendConfiguration.getRedisHost(),
-                        BackendConfiguration.getRedisPort(),
-                        BackendConfiguration.getRedisPassword()
-                );
-
-                redissonConnection = new RedissonConnection(redisConfig);
-            }
-
-            try {
-                this.spigotBridgeEventsProvider = new SpigotBridgeEventsProvider(this, redissonConnection);
-            } catch (UnsupportedOperationException e) {
-                this.spigotBridgeEventsProvider = null;
-            }
+            this.spigotBridgeEventsProvider = new SpigotBridgeEventsProvider(this);
 
             this.swiftLoginImplementation = new SwiftLoginImplementation<Player, Empty>(this, configs, ServerType.BACKEND, this.getSwiftLogger(),
                     new DriverConfig(
@@ -148,7 +137,7 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
                             BackendConfiguration.getMysqlDatabase(),
                             BackendConfiguration.getMysqlPort(),
                             BackendConfiguration.getMysqlUser(),
-                            BackendConfiguration.getMysqlPassword()), redissonConnection) {
+                            BackendConfiguration.getMysqlPassword()), (BackendConfiguration.isMultiInstanceSupported()) ? redisConfig : null) {
 
 
                 @Override
@@ -176,6 +165,12 @@ public class SwiftLoginSpigot extends JavaPlugin implements SwiftLoginPlugin<Pla
                     throw new UnsupportedOperationException();
                 }
             };
+
+            try {
+                spigotBridgeEventsProvider.initialize(swiftLoginImplementation.getRedissonConnection());
+            } catch (UnsupportedOperationException e) {
+                spigotBridgeEventsProvider = null;
+            }
 
             if (!this.isEnabled()) return;
 

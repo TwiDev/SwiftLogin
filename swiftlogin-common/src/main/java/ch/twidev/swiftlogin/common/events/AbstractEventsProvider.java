@@ -43,14 +43,27 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
 
     private final HashMap<String, Class<? extends SwiftEvent>> registeredEvents = new HashMap<>();
 
-    private final RedissonConnection redissonConnection;
+    private RedissonConnection redissonConnection;
 
     protected final Gson eventsGson;
 
-    public AbstractEventsProvider(Class<P> clazz, RedissonConnection redissonConnection) {
-        this.redissonConnection = redissonConnection;
-
+    public AbstractEventsProvider(Class<P> clazz) {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+
+            final List<Class<?>> typeClass = Arrays.asList(Enum.class, String.class, Boolean.class, clazz, SwiftPlayer.class, Profile.class, SwiftServer.class, Integer.class);
+
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                return !typeClass.contains(fieldAttributes.getDeclaredType().getClass());
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return !typeClass.contains(aClass);
+            }
+        });
+
         gsonBuilder.registerTypeHierarchyAdapter(SwiftPlayer.class, new UniqueIdAdapter<SwiftPlayer>() {
             @Override
             public SwiftPlayer adapt(String fieldValue) {
@@ -135,6 +148,10 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
         listeners.remove(swiftListener.getClass());
     }
 
+    public void setRedissonConnection(RedissonConnection redissonConnection) {
+        this.redissonConnection = redissonConnection;
+    }
+
     @Override
     public <E extends SwiftEvent<P>> void callEvent(E event, boolean broadcast) {
         if(redissonConnection != null && broadcast) {
@@ -159,6 +176,10 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
                 });
 
 
+    }
+
+    protected RedissonConnection getRedissonConnection() {
+        return redissonConnection;
     }
 
     public abstract String getUniqueIdentifier(P p);

@@ -65,7 +65,7 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
 
     private boolean isMultiInstanceSupported = false;
 
-    public SwiftLoginImplementation(SwiftLoginPlugin<P, S> swiftLoginPlugin, ConfigurationHandler configurationHandler, ServerType serverType, SwiftLogger logger, @Nullable DriverConfig sqlConfig, RedissonConnection redis) {
+    public SwiftLoginImplementation(SwiftLoginPlugin<P, S> swiftLoginPlugin, ConfigurationHandler configurationHandler, ServerType serverType, SwiftLogger logger, DriverConfig sqlConfig, @Nullable DriverConfig redis) {
         swiftLoginImplementation = this;
 
         this.swiftLoginPlugin = swiftLoginPlugin;
@@ -74,9 +74,10 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
         this.serverType = serverType;
 
         this.sqlConnection = new SQLConnection(sqlConfig);
-        this.redissonConnection = redis;
 
         if(redis != null) {
+            this.redissonConnection = new RedissonConnection(redis);
+
             if(!redissonConnection.isConnected()) {
                 isMultiInstanceSupported = false;
 
@@ -84,6 +85,8 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
             }else{
                 isMultiInstanceSupported = true;
             }
+        }else{
+            this.redissonConnection = null;
         }
 
         this.profileManager = new ProfileManager(this.sqlConnection);
@@ -124,6 +127,10 @@ public abstract class SwiftLoginImplementation<P, S> extends SwiftLogin<P> {
     public void onStop() {
         RunningTask runningTask = this.backendServerHandler.getCacheTask();
         if(runningTask != null) runningTask.stop();
+    }
+
+    public RedissonConnection getRedissonConnection() {
+        return redissonConnection;
     }
 
     public MojangManager getMojangManager() {

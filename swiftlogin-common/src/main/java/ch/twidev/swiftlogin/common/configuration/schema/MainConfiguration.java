@@ -266,19 +266,19 @@ public class MainConfiguration {
             ""
     );
 
-    public boolean getMultiInstanceSupport() {
+    public static boolean isMultiInstanceSupported() {
         return multiInstanceSupport.getValue();
     }
 
-    public String getRedisHost() {
+    public static String getRedisHost() {
         return redisHost.getValue();
     }
 
-    public int getRedisPort() {
+    public static int getRedisPort() {
         return redisPort.getValue();
     }
 
-    public String getRedisPassword() {
+    public static String getRedisPassword() {
         return redisPassword.getValue();
     }
 

@@ -39,4 +39,6 @@ public class SwiftEvent<P> {
     public boolean isAsynchronous() {
         return async;
     }
+
+
 }

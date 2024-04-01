@@ -15,9 +15,10 @@ import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.events.AbstractEventsProvider;
 import ch.twidev.swiftlogin.common.exception.PluginIssues;
 import ch.twidev.swiftlogin.spigot.SwiftLoginSpigot;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import org.bukkit.entity.Player;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
@@ -29,13 +30,17 @@ public class SpigotBridgeEventsProvider extends AbstractEventsProvider<Player> {
 
     private boolean isInitialized = false;
 
-    public SpigotBridgeEventsProvider(SwiftLoginSpigot swiftLoginSpigot, RedissonConnection redissonConnection) throws UnsupportedOperationException{
-        super(Player.class, redissonConnection);
+    public SpigotBridgeEventsProvider(SwiftLoginSpigot swiftLoginSpigot){
+        super(Player.class);
 
         this.spigot = swiftLoginSpigot;
+    }
+
+    public void initialize(RedissonConnection redissonConnection) throws UnsupportedOperationException {
+        this.setRedissonConnection(redissonConnection);
 
         if(BackendConfiguration.isMultiInstanceSupported() && (redissonConnection == null || !redissonConnection.isConnected())) {
-            swiftLoginSpigot.getSwiftLogger().sendWarningError(PluginIssues.REDISSON_NOT_CONNECTED,
+            spigot.getSwiftLogger().sendWarningError(PluginIssues.REDISSON_NOT_CONNECTED,
                     "Cannot handle multi instances events, because redisson driver isn't connected. Please check your configuration file!");
 
             throw new UnsupportedOperationException();
@@ -45,8 +50,8 @@ public class SpigotBridgeEventsProvider extends AbstractEventsProvider<Player> {
 
         redissonConnection.getConnection().getTopic(EVENT_BRIDGE_TOPIC).addListener(String.class, (charSequence, s) -> {
             try {
-                JSONObject jsonObject = new JSONObject(s);
-                String eventName = jsonObject.getString("eventName");
+                JsonObject jsonObject = new JsonParser().parse(s).getAsJsonObject();
+                String eventName = jsonObject.get("eventName").getAsString();
 
                 if(this.getRegisteredEvents().containsKey(eventName)) {
                     Class<? extends SwiftEvent> events = this.getRegisteredEvents().get(eventName);
@@ -55,7 +60,7 @@ public class SpigotBridgeEventsProvider extends AbstractEventsProvider<Player> {
 
                     this.callEvent(swiftEvent, false);
                 }
-            } catch (JSONException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+            } catch (JsonParseException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                      InvocationTargetException ignore) {}
         });
 

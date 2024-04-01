@@ -21,11 +21,9 @@ import ch.twidev.swiftlogin.common.configuration.Configuration;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationFiles;
 import ch.twidev.swiftlogin.common.configuration.ConfigurationHandler;
 import ch.twidev.swiftlogin.common.configuration.helpers.TranslationHandler;
-import ch.twidev.swiftlogin.common.configuration.schema.BackendConfiguration;
 import ch.twidev.swiftlogin.common.configuration.schema.MainConfiguration;
 import ch.twidev.swiftlogin.common.database.DriverConfig;
 import ch.twidev.swiftlogin.common.database.DriverType;
-import ch.twidev.swiftlogin.common.database.redis.RedissonConnection;
 import ch.twidev.swiftlogin.common.events.AbstractEventsProvider;
 import ch.twidev.swiftlogin.common.exception.PluginConfigurationException;
 import ch.twidev.swiftlogin.common.servers.ServerType;
@@ -80,20 +78,14 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
             this.bungeecordServerPlatformHandler = new BungeecordServerPlatformHandler(this);
             this.commandManager = new BungeeCommandManager(this);
 
-            RedissonConnection redissonConnection = null;
+            DriverConfig redisConfig = new DriverConfig(
+                    DriverType.REDISSON,
+                    MainConfiguration.getRedisHost(),
+                    MainConfiguration.getRedisPort(),
+                    MainConfiguration.getRedisPassword()
+            );
 
-            if(BackendConfiguration.isMultiInstanceSupported()) {
-                DriverConfig redisConfig = new DriverConfig(
-                        DriverType.REDISSON,
-                        BackendConfiguration.getRedisHost(),
-                        BackendConfiguration.getRedisPort(),
-                        BackendConfiguration.getRedisPassword()
-                );
-
-                redissonConnection = new RedissonConnection(redisConfig);
-            }
-
-            this.eventsProvider = new AbstractEventsProvider<>(ProxiedPlayer.class, redissonConnection) {
+            this.eventsProvider = new AbstractEventsProvider<>(ProxiedPlayer.class) {
                 @Override
                 public String getUniqueIdentifier(ProxiedPlayer player) {
                     return bungeecordPlatformHandler.getPlayerUUID(player).toString();
@@ -114,7 +106,7 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
                             MainConfiguration.getMysqlDatabase(),
                             MainConfiguration.getMysqlPort(),
                             MainConfiguration.getMysqlUser(),
-                            MainConfiguration.getMysqlPassword()), redissonConnection) {
+                            MainConfiguration.getMysqlPassword()), (MainConfiguration.isMultiInstanceSupported()) ? redisConfig : null) {
 
                 @Override
                 public CryptoProvider getCurrentCryptoProvider() {
@@ -141,6 +133,8 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
                     return bungeeAuthorizationProvider;
                 }
             };
+
+            this.eventsProvider.setRedissonConnection(swiftLoginImplementation.getRedissonConnection());
 
             this.swiftLoginImplementation.initCommands(ProxiedPlayer.class);
 

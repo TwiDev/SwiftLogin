@@ -82,7 +82,7 @@ public class ServersListener implements Listener {
 
                 PlayerJoinMainServerEvent<ProxiedPlayer> serverEvent = new PlayerJoinMainServerEvent<>(swiftPlayer, proxiedPlayer, swiftServer);
 
-                bungee.getImplementation().getEventProvider().callEvent(serverEvent);
+                bungee.getImplementation().getEventProvider().callEvent(serverEvent, false);
 
                 if(serverEvent.isCancelled()) {
                     event.setCancelled(true);
@@ -121,7 +121,7 @@ public class ServersListener implements Listener {
 
                 PlayerJoinLimboServerEvent<ProxiedPlayer> serverEvent = new PlayerJoinLimboServerEvent<>(swiftPlayer, proxiedPlayer, swiftServer);
 
-                bungee.getImplementation().getEventProvider().callEvent(serverEvent);
+                bungee.getImplementation().getEventProvider().callEvent(serverEvent, false);
 
                 if(serverEvent.isCancelled()) {
                     proxiedPlayer.disconnect(

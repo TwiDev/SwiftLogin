@@ -146,11 +146,6 @@
         </plugins>
     </build>
       <dependencies>
-          <dependency>
-              <groupId>redis.clients</groupId>
-              <artifactId>jedis</artifactId>
-              <version>5.0.0</version>
-          </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -179,7 +174,6 @@
               <groupId>org.redisson</groupId>
               <artifactId>redisson</artifactId>
               <version>3.23.1</version>
-              <scope>provided</scope>
           </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
