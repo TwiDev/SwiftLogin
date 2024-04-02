@@ -33,4 +33,6 @@ public interface SwiftServer extends Unique {
 
     String toRawString();
 
+    String toJson();
+
 }

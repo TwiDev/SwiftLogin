@@ -9,6 +9,7 @@
 
 package ch.twidev.swiftlogin.common.database.redis;
 
+import ch.twidev.swiftlogin.api.servers.SwiftServer;
 import ch.twidev.swiftlogin.common.database.Driver;
 import ch.twidev.swiftlogin.common.database.DriverConfig;
 import ch.twidev.swiftlogin.common.database.DriverType;
@@ -43,7 +44,7 @@ public class RedissonConnection extends Driver<RedissonClient> {
 
         this.setConnection(conn);
     }
-    
+
     @Override
     public void closeConnection() {
         connection.shutdown();

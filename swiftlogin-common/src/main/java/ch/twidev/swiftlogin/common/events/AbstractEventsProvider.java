@@ -67,10 +67,10 @@ public abstract class AbstractEventsProvider<P> implements SwiftEventProvider<P>
                 ).orElse(null);
             }
         });
-        gsonBuilder.registerTypeAdapter(SwiftServer.class, new UniqueIdAdapter<SwiftServer>() {
+        gsonBuilder.registerTypeHierarchyAdapter(SwiftServer.class, new UniqueIdAdapter<SwiftServer>() {
             @Override
             public SwiftServer adapt(String fieldValue) {
-                return null;
+                return SwiftLoginImplementation.getInstance().getServerManager().fromJson(fieldValue);
             }
         });
 

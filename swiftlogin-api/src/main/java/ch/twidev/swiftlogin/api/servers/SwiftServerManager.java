@@ -37,4 +37,6 @@ public interface SwiftServerManager {
 
     void unregisterServer(String serverName);
 
+    SwiftServer fromJson(String string);
+
 }

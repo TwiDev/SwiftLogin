@@ -18,6 +18,8 @@ import ch.twidev.swiftlogin.common.SwiftLoginPlugin;
 import ch.twidev.swiftlogin.common.SwiftProxy;
 import ch.twidev.swiftlogin.common.configuration.schema.MainConfiguration;
 import ch.twidev.swiftlogin.common.util.RunningTask;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -154,5 +156,14 @@ public class BackendServerHandler<P, S> implements SwiftServerManager {
     @Override
     public void unregisterServer(String serverName) {
         SERVERS_CACHE.entrySet().removeIf(entry -> entry.getValue().getServerName().equals(serverName));
+    }
+
+    @Override
+    public SwiftServer fromJson(String string) {
+        try {
+            return new Gson().fromJson(string, SwiftServer.class);
+        } catch (JsonSyntaxException ignore) {
+            return null;
+        }
     }
 }

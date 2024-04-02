@@ -13,6 +13,7 @@ import ch.twidev.swiftlogin.api.servers.BackendType;
 import ch.twidev.swiftlogin.api.servers.ServerState;
 import ch.twidev.swiftlogin.api.servers.SwiftServer;
 import ch.twidev.swiftlogin.common.SwiftLoginImplementation;
+import com.google.gson.Gson;
 
 import java.util.UUID;
 
@@ -90,6 +91,11 @@ public class BackendServer implements SwiftServer {
     @Override
     public String toRawString() {
         return this.toString();
+    }
+
+    @Override
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 
     @Override
