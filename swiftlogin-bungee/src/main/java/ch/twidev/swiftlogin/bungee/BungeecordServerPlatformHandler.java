@@ -9,6 +9,7 @@
 
 package ch.twidev.swiftlogin.bungee;
 
+import ch.twidev.swiftlogin.api.event.events.PlayerJoinMainServerEvent;
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.api.servers.BackendType;
 import ch.twidev.swiftlogin.api.servers.ServerState;
@@ -52,6 +53,22 @@ public class BungeecordServerPlatformHandler implements ServerPlatformHandler<Pr
                     player.getName(), backendType.toString());
 
             return;
+        }
+
+        SwiftPlayer swiftPlayer = swiftLoginBungee.getImplementation().getProfileManager().getProfileByName(player.getName()).orElse(null);
+        if(swiftPlayer == null) return;
+
+        if(backendType == BackendType.MAIN) {
+            PlayerJoinMainServerEvent<ProxiedPlayer> serverEvent = new PlayerJoinMainServerEvent<>(swiftPlayer, player, optionalSwiftServer.get());
+
+            swiftLoginBungee.getImplementation().getEventProvider().callEvent(serverEvent, false);
+
+            if (serverEvent.isCancelled()) {
+                player.disconnect(
+                        TextComponent.fromLegacy(serverEvent.getCancelledReason())
+                );
+                return;
+            }
         }
 
         ServerInfo serverInfo = this.getServer(optionalSwiftServer.get().getServerName());
