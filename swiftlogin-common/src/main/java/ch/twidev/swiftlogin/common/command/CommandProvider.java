@@ -78,6 +78,15 @@ public class CommandProvider<P> {
                 P issuer = platformHandler.getIssuer(sender);
 
                 if(exception.hasReason()) {
+                    if(exception.getReason().equals(TranslationConfiguration.CAPTCHA_NOT_MATCH)
+                            || exception.getReason().equals(TranslationConfiguration.ERROR_PASSWORD_NOT_MATCH)) {
+
+                        if(MainConfiguration.getWrongPasswordDisconnection()) {
+                            platformHandler.disconnect(issuer, exception.getReason().getSimpleTranslation());
+                            return true;
+                        }
+                    }
+
                     platformHandler.sendMessage(issuer, exception.getReason());
                 }else{
                     platformHandler.sendMessage(issuer, "&cAn unexpected exception occurred while performing command");
