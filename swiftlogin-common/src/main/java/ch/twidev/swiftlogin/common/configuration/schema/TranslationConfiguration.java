@@ -413,6 +413,18 @@ public class TranslationConfiguration {
             20
     );
 
+    public static final ConfigurationMessage COMMAND_ERROR_PERMISSION_DENIED = new ConfigurationMessage(
+            String.class,
+            "commandErrorPermissionDenied",
+            "&cYou do not have permission to perform this action."
+    );
+
+    public static final ConfigurationMessage COMMAND_ERROR_INVALID_SYNTAX = new ConfigurationMessage(
+            String.class,
+            "commandErrorInvalidSyntax",
+            "&cYour command syntax is not correct."
+    );
+
     public ConfigurationMessage getErrorUserNotExists() {
         return ERROR_USER_NOT_EXISTS;
     }

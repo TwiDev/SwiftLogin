@@ -12,6 +12,8 @@ package ch.twidev.swiftlogin.common.command;
 import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.common.PlatformHandler;
 import ch.twidev.swiftlogin.common.SwiftProxy;
+import ch.twidev.swiftlogin.common.configuration.Configuration;
+import ch.twidev.swiftlogin.common.configuration.ConfigurationMessage;
 import ch.twidev.swiftlogin.common.configuration.schema.MainConfiguration;
 import ch.twidev.swiftlogin.common.configuration.schema.TranslationConfiguration;
 import ch.twidev.swiftlogin.common.exception.PluginCommandException;
@@ -20,18 +22,24 @@ import co.aikar.commands.CommandContexts;
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.MessageKeys;
+import co.aikar.locales.MessageKey;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 
 public class CommandProvider<P> {
 
     private static final String COMMAND_PACKAGE = "ch.twidev.swiftlogin.common.command.commands";
 
-    public CommandManager<?,?,?,?,?,?> commandManager;
+    private final SwiftProxy<P,?,?> swiftProxy;
+
+    public final CommandManager<?,?,?,?,?,?> commandManager;
 
     public CommandProvider(Class<P> pClass, SwiftProxy<P,?,?> swiftLoginPlugin) {
         this.commandManager = swiftLoginPlugin.getCommandProvider();
+        this.swiftProxy = swiftLoginPlugin;
+
         if(commandManager == null) return;
 
         PlatformHandler<P> platformHandler = swiftLoginPlugin.getImplementation().getPlatformHandler();
@@ -116,7 +124,39 @@ public class CommandProvider<P> {
                 .filter(CommandBuilder::isEnabled)
                 .forEach(commandBuilder -> {
                     commandManager.registerCommand(commandBuilder);
+
+                    this.setConfigurationMessages(commandBuilder);
                 });
+
+
+        this.setGlobalMessageConfiguration();
+    }
+
+    public void setGlobalMessageConfiguration() {
+        Locale defaultLocale = commandManager.getLocales().getDefaultLocale();
+
+        for (CommandConfiguration commandConfiguration : CommandConfiguration.values()) {
+            commandManager.getLocales().addMessage(
+                    defaultLocale,
+                    MessageKey.of(commandConfiguration.getCommandKey()),
+                    commandConfiguration.getConfigurationMessage().getSimpleTranslation());
+        }
+    }
+
+    public void setConfigurationMessages(CommandBuilder<?> commandBuilder) {
+        if(!commandBuilder.getClass().isAnnotationPresent(CommandInfo.class)) {
+            return;
+        }
+
+        Configuration translation = swiftProxy.getTranslationConfiguration();
+        CommandInfo command = commandBuilder.getClass().getAnnotation(CommandInfo.class);
+
+        ConfigurationMessage configurationMessage = translation.getTranslationKey(
+                String.format("command.%s.syntax", command.name())
+        );
+
+        commandManager.getLocales().addMessage(
+                commandManager.getLocales().getDefaultLocale(), MessageKey.of("syntax." + command.name()), configurationMessage.getSimpleTranslation());
 
     }
 

@@ -9,7 +9,6 @@
 
 package ch.twidev.swiftlogin.common;
 
-import ch.twidev.swiftlogin.api.SwiftLogin;
 import ch.twidev.swiftlogin.api.crypto.CryptoProvider;
 import ch.twidev.swiftlogin.api.crypto.CryptoType;
 import ch.twidev.swiftlogin.common.configuration.Configuration;
