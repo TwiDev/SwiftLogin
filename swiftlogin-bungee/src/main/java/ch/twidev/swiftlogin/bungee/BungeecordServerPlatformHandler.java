@@ -46,7 +46,7 @@ public class BungeecordServerPlatformHandler implements ServerPlatformHandler<Pr
     @Override
     public void sendPlayerTo(ProxiedPlayer player, BackendType backendType) {
         Optional<SwiftServer> optionalSwiftServer = swiftLoginBungee.getImplementation().getServerManager().getAvailableServers(backendType);
-        if(optionalSwiftServer.isEmpty() || !isServerExist(optionalSwiftServer.get().getServerName())) {
+        if(!optionalSwiftServer.isPresent() || !isServerExist(optionalSwiftServer.get().getServerName())) {
             swiftLogger.sendRawPluginError(
                     PluginIssues.NO_SERVERS_FOUND,
                     "Impossible to move the player %s to a server of type %s because no available servers were found",
@@ -129,17 +129,18 @@ public class BungeecordServerPlatformHandler implements ServerPlatformHandler<Pr
 
     @Override
     public void connectToServer(ProxiedPlayer player, ServerInfo server) {
-        swiftLoginBungee.getImplementation().getProfileManager().getCachedProfileByName(player.getName()).ifPresentOrElse(swiftPlayer -> {
+        Optional<SwiftPlayer> swiftPlayer = swiftLoginBungee.getImplementation().getProfileManager().getCachedProfileByName(player.getName());
+        if(swiftPlayer.isPresent()) {
             try {
                 player.connect(server);
 
-                this.sendConnectionToServer(player, swiftPlayer, server);
+                this.sendConnectionToServer(player, swiftPlayer.get(), server);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }, () -> {
+        }else{
             swiftLogger.info(String.format("Cannot send %s player to %s server because profile instance is null please check your database configuration", player.getName(), server.getName()));
-        });
+        };
 
     }
 

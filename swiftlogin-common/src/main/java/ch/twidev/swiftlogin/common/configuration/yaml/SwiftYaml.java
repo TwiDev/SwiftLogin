@@ -13,7 +13,6 @@ import ch.twidev.swiftlogin.common.configuration.ConfigurationKey;
 import ch.twidev.swiftlogin.common.configuration.node.ConfigurationNode;
 import ch.twidev.swiftlogin.common.configuration.node.ConfigurationValue;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -55,7 +54,7 @@ public class SwiftYaml {
         
         Yaml yaml = new Yaml(dumperOptions);
 
-        try (FileWriter writer = new FileWriter(outputFile, StandardCharsets.UTF_8)) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile, true), StandardCharsets.UTF_8))) {
             if (header != null) {
                 for (String line : header.split("\n")) {
                     writer.write("# " + line + "\n");

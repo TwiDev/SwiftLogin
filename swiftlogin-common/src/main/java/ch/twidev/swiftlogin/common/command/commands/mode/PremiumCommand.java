@@ -25,6 +25,8 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Single;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @CommandInfo(name = "premium")
@@ -51,22 +53,23 @@ public class PremiumCommand<P> extends CommandBuilder<P> {
             }
 
             try {
-                swiftLoginPlugin.getImplementation().getMojangManager().request(MojangManager.MOJANG_API, swiftPlayer.getRecentName()).ifPresentOrElse(premiumUuid -> {
-                    SwiftPlayer premiumPlayer = swiftLoginPlugin.getImplementation().getProfileManager().getProfileByPremiumId(premiumUuid).orElse(null);
+                Optional<UUID> premiumUUID = swiftLoginPlugin.getImplementation().getMojangManager().request(MojangManager.MOJANG_API, swiftPlayer.getRecentName());
+                if(premiumUUID.isPresent()) {
+                    SwiftPlayer premiumPlayer = swiftLoginPlugin.getImplementation().getProfileManager().getProfileByPremiumId(premiumUUID.get()).orElse(null);
 
                     if(premiumPlayer != null){
                         throw new PluginCommandException(TranslationConfiguration.ERROR_PREMIUM_ALREADY_EXIST);
                     }
 
-                    swiftPlayer.getProfileTemplate().set("premiumId", premiumUuid);
+                    swiftPlayer.getProfileTemplate().set("premiumId", premiumUUID.get());
                     swiftPlayer.getProfileTemplate().set("currentSession", 0L);
                     swiftPlayer.getProfileTemplate().set("hashedPassword", null);
 
                     platformHandler.sendMessage(player, TranslationConfiguration.SUCCESS_PREMIUM_ENABLED);
 
-                }, () -> {
+                }else{
                     throw new PluginCommandException(TranslationConfiguration.ERROR_NOT_PREMIUM);
-                });
+                }
             } catch (IOException e) {
                 throw new PluginCommandException(TranslationConfiguration.MOJANG_SERVERS_DOWN);
             }

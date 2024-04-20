@@ -9,9 +9,7 @@
 
 package ch.twidev.swiftlogin.velocity;
 
-import ch.twidev.swiftlogin.api.SwiftLogin;
 import ch.twidev.swiftlogin.api.crypto.CryptoProvider;
-import ch.twidev.swiftlogin.api.exception.ServerSideNotSupportedException;
 import ch.twidev.swiftlogin.common.SwiftLogger;
 import ch.twidev.swiftlogin.common.SwiftLoginImplementation;
 import ch.twidev.swiftlogin.common.SwiftProxy;

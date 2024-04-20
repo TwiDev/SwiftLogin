@@ -36,11 +36,12 @@ public class EventsBridgeTests {
         Player player = new Player("test", UUID.randomUUID());
         SwiftPlayer swiftPlayer = new Swift(null, player.getPlayerUuid());
 
-        AbstractEventsProvider<Player> eventsProvider = new AbstractEventsProvider<>(Player.class) {
+        AbstractEventsProvider<Player> eventsProvider = new AbstractEventsProvider<Player>(Player.class) {
             @Override
             public String getUniqueIdentifier(Player player) {
                 return player.getPlayerUuid().toString();
             }
+
 
             @Override
             public Player getFromUniqueIdentifier(String s) {

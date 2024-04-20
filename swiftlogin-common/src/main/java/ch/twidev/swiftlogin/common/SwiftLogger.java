@@ -10,6 +10,7 @@
 package ch.twidev.swiftlogin.common;
 
 import ch.twidev.swiftlogin.common.exception.PluginIssues;
+import jodd.util.StringUtil;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -74,13 +75,13 @@ public class SwiftLogger extends Logger {
 
         int boxLength = longestLine + 6;
 
-        this.info("#"+ "=".repeat(boxLength) +"#");
-        this.info("#"+ " ".repeat(boxLength) +"#");
+        this.info("#"+ StringUtil.repeat("=", boxLength) +"#");
+        this.info("#"+ StringUtil.repeat(" ", boxLength) +"#");
         for (String s : messages) {
-            this.info("# " + s + " ".repeat(boxLength - s.length() - 1) + "#");
+            this.info("# " + s + StringUtil.repeat(" ", boxLength - s.length() - 1) + "#");
         }
-        this.info("#"+ " ".repeat(boxLength) +"#");
-        this.info("#"+ "=".repeat(boxLength) +"#");
+        this.info("#"+ StringUtil.repeat(" ", boxLength) +"#");
+        this.info("#"+ StringUtil.repeat("=", boxLength) +"#");
     }
 
     public void sendRawPluginError(PluginIssues issueCode, String messages, Object... args) {
@@ -120,24 +121,24 @@ public class SwiftLogger extends Logger {
 
         int boxLength = Math.max(REPORT_MESSAGE.length(), longestLine) + 6;
 
-        this.log(level,"#"+ "=".repeat(boxLength) +"#");
-        this.log(level,"#"+ " ".repeat(boxLength) +"#");
+        this.log(level,"#"+ StringUtil.repeat("=", boxLength) +"#");
+        this.log(level,"#"+ StringUtil.repeat(" ", boxLength) +"#");
         for (String s : messages) {
-            this.log(level,"# " + s + " ".repeat(boxLength - s.length() - 1) + "#");
+            this.log(level,"# " + s + StringUtil.repeat("",boxLength - s.length() - 1) + "#");
         }
-        this.log(level,"#"+ " ".repeat(boxLength) +"#");
+        this.log(level,"#"+ StringUtil.repeat(" ", boxLength) +"#");
         if(issueCode != PluginIssues.NONE) {
-            this.log(level, "# " + PLUGIN_ERROR_MESSAGE + " ".repeat(boxLength - PLUGIN_ERROR_MESSAGE.length() - 1) + "#");
-            this.log(level, "# " + REPORT_MESSAGE + " ".repeat(boxLength - REPORT_MESSAGE.length() - 1) + "#");
-            this.log(level, "# " + REPORT_MESSAGE_URL + " ".repeat(boxLength - REPORT_MESSAGE_URL.length() - 1) + "#");
+            this.log(level, "# " + PLUGIN_ERROR_MESSAGE + StringUtil.repeat(" ", boxLength - PLUGIN_ERROR_MESSAGE.length() - 1) + "#");
+            this.log(level, "# " + REPORT_MESSAGE + StringUtil.repeat(" ", boxLength - REPORT_MESSAGE.length() - 1) + "#");
+            this.log(level, "# " + REPORT_MESSAGE_URL + StringUtil.repeat(" ", boxLength - REPORT_MESSAGE_URL.length() - 1) + "#");
             if (issueCode != null) {
                 String issueCodeMessage = "Your issue code: " + issueCode.getCode() + " | " + issueCode;
-                this.log(level, "#" + " ".repeat(boxLength) + "#");
-                this.log(level, "# " + issueCodeMessage + " ".repeat(boxLength - issueCodeMessage.length() - 1) + "#");
+                this.log(level, "#" + StringUtil.repeat(" ", boxLength) + "#");
+                this.log(level, "# " + issueCodeMessage + StringUtil.repeat(" ", boxLength - issueCodeMessage.length() - 1) + "#");
             }
-            this.log(level, "#" + " ".repeat(boxLength) + "#");
+            this.log(level, "#" + StringUtil.repeat(" ", boxLength) + "#");
         }
-        this.log(level,"#"+ "=".repeat(boxLength) +"#");
+        this.log(level,"#"+ StringUtil.repeat("=", boxLength) +"#");
     }
 
     public void sendWarningError(PluginIssues issueCode, String... messages) {
@@ -150,22 +151,22 @@ public class SwiftLogger extends Logger {
 
         int boxLength = Math.max(REPORT_MESSAGE.length(), longestLine) + 6;
 
-        this.warning("#"+ "=".repeat(boxLength) +"#");
-        this.warning("#"+ " ".repeat(boxLength) +"#");
+        this.warning("#"+ StringUtil.repeat("=", boxLength) +"#");
+        this.warning("#"+ StringUtil.repeat(" ", boxLength) +"#");
         for (String s : messages) {
-            this.warning("# " + s + " ".repeat(boxLength - s.length() - 1) + "#");
+            this.warning("# " + s + StringUtil.repeat(" ", boxLength - s.length() - 1) + "#");
         }
-        this.warning("#"+ " ".repeat(boxLength) +"#");
-        this.warning("# " + PLUGIN_ERROR_MESSAGE + " ".repeat(boxLength - PLUGIN_ERROR_MESSAGE.length() - 1) + "#");
-        this.warning("# " + REPORT_MESSAGE + " ".repeat(boxLength - REPORT_MESSAGE.length() - 1) + "#");
-        this.warning("# " + REPORT_MESSAGE_URL + " ".repeat(boxLength - REPORT_MESSAGE_URL.length() - 1) + "#");
+        this.warning("#"+ StringUtil.repeat(" ", boxLength) +"#");
+        this.warning("# " + PLUGIN_ERROR_MESSAGE + StringUtil.repeat(" ", boxLength - PLUGIN_ERROR_MESSAGE.length() - 1) + "#");
+        this.warning("# " + REPORT_MESSAGE + StringUtil.repeat(" ", boxLength - REPORT_MESSAGE.length() - 1) + "#");
+        this.warning("# " + REPORT_MESSAGE_URL + StringUtil.repeat(" ", boxLength - REPORT_MESSAGE_URL.length() - 1) + "#");
         if(issueCode != null) {
             String issueCodeMessage = "Your issue code: " + issueCode.getCode() + " | " + issueCode;
-            this.warning("#"+ " ".repeat(boxLength) +"#");
-            this.warning("# " + issueCodeMessage + " ".repeat(boxLength - issueCodeMessage.length() - 1) + "#");
+            this.warning("#"+ StringUtil.repeat(" ", boxLength) +"#");
+            this.warning("# " + issueCodeMessage + StringUtil.repeat(" ", boxLength - issueCodeMessage.length() - 1) + "#");
         }
-        this.warning("#"+ " ".repeat(boxLength) +"#");
-        this.warning("#"+ "=".repeat(boxLength) +"#");
+        this.warning("#"+ StringUtil.repeat(" ", boxLength) +"#");
+        this.warning("#"+ StringUtil.repeat("=", boxLength) +"#");
     }
 
     @Override

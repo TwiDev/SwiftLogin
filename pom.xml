@@ -29,8 +29,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <!--<maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot-api.version>1.8-R0.1-SNAPSHOT</spigot-api.version>
         <global.version>1.0.3-RELEASE</global.version>
@@ -82,8 +82,8 @@
                 <version>3.8.1</version>
                 <configuration>
                     <compilerId>eclipse</compilerId>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
                 <dependencies>
                     <!-- Compiler -->

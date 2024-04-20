@@ -13,6 +13,7 @@ import ch.twidev.swiftlogin.api.authorization.AuthenticatedReason;
 import ch.twidev.swiftlogin.api.authorization.AuthorizationProvider;
 import ch.twidev.swiftlogin.api.authorization.ConnectionType;
 import ch.twidev.swiftlogin.api.event.events.PlayerAuthenticatedEvent;
+import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.bungee.BungeeTranslationHandler;
 import ch.twidev.swiftlogin.bungee.SwiftLoginBungee;
 import ch.twidev.swiftlogin.common.SwiftLoginImplementation;
@@ -36,6 +37,7 @@ import net.md_5.bungee.event.EventPriority;
 import net.md_5.bungee.protocol.packet.Handshake;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 import java.util.UUID;
 
 public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo, PendingConnection> implements Listener {
@@ -84,7 +86,9 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(LoginEvent event) {
         PendingConnection pendingConnection = event.getConnection();
-        bungee.getImplementation().getProfileManager().getCachedProfileByName(pendingConnection.getName()).ifPresentOrElse(swiftPlayer -> {
+        Optional<SwiftPlayer> optionalSwiftPlayer = bungee.getImplementation().getProfileManager().getCachedProfileByName(pendingConnection.getName());
+        if(optionalSwiftPlayer.isPresent()) {
+            SwiftPlayer swiftPlayer = optionalSwiftPlayer.get();
             UUID uuid = swiftPlayer.getUniqueId();
 
             String accessToken = MainConfiguration.getToken();
@@ -104,12 +108,12 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-        }, () -> {
+        }else{
             event.setCancelReason(
                     bungeeTranslationHandler.formatComponent(TranslationConfiguration.ERROR_USER_NOT_EXISTS, pendingConnection.getName())
             );
             event.setCancelled(true);
-        });
+        };
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -118,7 +122,9 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
         SwiftLoginImplementation<ProxiedPlayer, ServerInfo> swiftLoginImplementation = bungee.getImplementation();
         AuthorizationProvider<ProxiedPlayer> authorizationProvider = swiftLoginImplementation.getAuthorizationProvider();
 
-        swiftLoginImplementation.getProfileManager().getCachedProfileByName(player.getName()).ifPresentOrElse(swiftPlayer -> {
+        Optional<SwiftPlayer> optionalSwiftPlayer = swiftLoginImplementation.getProfileManager().getCachedProfileByName(player.getName());
+        if(optionalSwiftPlayer.isPresent()) {
+            SwiftPlayer swiftPlayer = optionalSwiftPlayer.get();
             boolean isAuthorized = swiftPlayer.isPremium();
             Profile profile = (Profile) swiftPlayer;
             if(swiftPlayer.hasCurrentSession()) {
@@ -171,11 +177,11 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
                     // Register Call
                 }
             }
-        },() -> {
+        }else{
             player.disconnect(
                     bungee.getTranslationConfiguration().formatComponent(TranslationConfiguration.ERROR_USER_NOT_EXISTS, player.getName())
             );
-        });
+        };
     }
 
     @Override

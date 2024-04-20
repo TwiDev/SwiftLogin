@@ -9,6 +9,7 @@
 
 package ch.twidev.swiftlogin.bungee.listeners;
 
+import ch.twidev.swiftlogin.api.players.SwiftPlayer;
 import ch.twidev.swiftlogin.api.players.SwiftPlayerManager;
 import ch.twidev.swiftlogin.bungee.SwiftLoginBungee;
 import ch.twidev.swiftlogin.common.configuration.Configuration;
@@ -20,6 +21,8 @@ import net.md_5.bungee.api.plugin.Cancellable;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
+
+import java.util.Optional;
 
 public class ActionListener implements Listener {
 
@@ -35,13 +38,14 @@ public class ActionListener implements Listener {
     public void checkCancel(Cancellable cancellable, ProxiedPlayer proxiedPlayer) {
         if(cancellable.isCancelled()) return;
 
-        swiftPlayerManager.getCachedProfileByName(proxiedPlayer.getName()).ifPresentOrElse(swiftPlayer -> {
-            if(!swiftPlayer.isLogged()) {
+        Optional<SwiftPlayer> swiftPlayer = swiftPlayerManager.getCachedProfileByName(proxiedPlayer.getName());
+        if(swiftPlayer.isPresent()) {
+            if(!swiftPlayer.get().isLogged()) {
                 cancellable.setCancelled(true);
             }
-        }, () -> {
+        }else{
             cancellable.setCancelled(true);
-        });
+        };
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -85,7 +85,7 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
                     MainConfiguration.getRedisPassword()
             );
 
-            this.eventsProvider = new AbstractEventsProvider<>(ProxiedPlayer.class) {
+            this.eventsProvider = new AbstractEventsProvider<ProxiedPlayer>(ProxiedPlayer.class) {
                 @Override
                 public String getUniqueIdentifier(ProxiedPlayer player) {
                     if(player == null) return null;
@@ -103,7 +103,7 @@ public class SwiftLoginBungee extends Plugin implements SwiftProxy<ProxiedPlayer
 
             PluginManager pluginManager = this.getProxy().getPluginManager();
 
-            this.swiftLoginImplementation = new SwiftLoginImplementation<>(this, configs, ServerType.BUNGEE, this.getSwiftLogger(),
+            this.swiftLoginImplementation = new SwiftLoginImplementation<ProxiedPlayer, ServerInfo>(this, configs, ServerType.BUNGEE, this.getSwiftLogger(),
                     new DriverConfig(
                             DriverType.MYSQL,
                             MainConfiguration.getMysqlHost(),

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ListHelper<T> extends ArrayList<T> {
 
-    private static final HashMap<Class<?>, Class<? extends ListHelper<?>>> helpers = new HashMap<>(){{
+    private static final HashMap<Class<?>, Class<? extends ListHelper<?>>> helpers = new HashMap<Class<?>, Class<? extends ListHelper<?>>>(){{
         put(String.class, StringList.class);
     }};
 
