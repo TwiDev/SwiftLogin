@@ -23,6 +23,7 @@ import ch.twidev.swiftlogin.common.connection.ConnectionListener;
 import ch.twidev.swiftlogin.common.connection.ConnectionResult;
 import ch.twidev.swiftlogin.common.connection.ConnectionState;
 import ch.twidev.swiftlogin.common.player.Profile;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -98,7 +99,10 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
             try {
                 Field field = clazz.getDeclaredField("uniqueId");
                 field.setAccessible(true);
+                Field fieldRewrite = clazz.getDeclaredField("rewriteId");
+                fieldRewrite.setAccessible(true);
                 field.set(initialHandler, uuid);
+                fieldRewrite.set(initialHandler, uuid);
                 handshake.setHost(accessToken);
                 handshake.setPort(0);
 
@@ -119,6 +123,8 @@ public class LoginListener extends ConnectionListener<ProxiedPlayer, ServerInfo,
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPostLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
+        BungeeCord.getInstance().broadcast(player.getUniqueId().toString());
+
         SwiftLoginImplementation<ProxiedPlayer, ServerInfo> swiftLoginImplementation = bungee.getImplementation();
         AuthorizationProvider<ProxiedPlayer> authorizationProvider = swiftLoginImplementation.getAuthorizationProvider();
 
