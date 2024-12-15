@@ -11,10 +11,7 @@ package ch.twidev.swiftlogin.common.database;
 
 import ch.twidev.swiftlogin.common.SwiftLogger;
 
-import java.util.logging.Logger;
-
 public abstract class Driver<C> {
-
 
     private final DriverConfig driverConfig;
 

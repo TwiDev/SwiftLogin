@@ -16,7 +16,7 @@ public enum CommandConfiguration {
 
     PERMISSION_DENIED("acf-core.permission_denied", TranslationConfiguration.COMMAND_ERROR_PERMISSION_DENIED),
     PERMISSION_DENIED_PARAMETER("acf-core.permission_denied_parameter", TranslationConfiguration.COMMAND_ERROR_PERMISSION_DENIED),
-    INVALID_SYNTAX("acf-core.invalid_syntax", TranslationConfiguration.COMMAND_ERROR_PERMISSION_DENIED);
+    INVALID_SYNTAX("acf-core.invalid_syntax", TranslationConfiguration.COMMAND_ERROR_INVALID_SYNTAX);
 
     final String commandKey;
     final ConfigurationMessage configurationMessage;

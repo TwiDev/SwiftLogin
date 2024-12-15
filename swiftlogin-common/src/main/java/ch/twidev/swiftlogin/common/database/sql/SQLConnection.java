@@ -136,32 +136,6 @@ public class SQLConnection extends Driver<HikariDataSource> {
     }
 
     /**
-     * Execute a query to the connection with callback result
-     *
-     * @param query to execute
-     * @param callback after response
-     * @param vars indefinite variable in the query
-     */
-    public void query(final String query, final Callback<ResultSet> callback, final Object... vars) {
-        try (Connection conn = this.connection.getConnection()) {
-            try (PreparedStatement ps = this.prepareStatement(conn, query, vars)) {
-                assert ps != null;
-                try (ResultSet rs = ps.executeQuery()) {
-                    callback.run(rs);
-                    this.closeRessources(rs, ps);
-                }
-            } catch (SQLException e) {
-                this.logs.severe("MySQL error: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } catch (SQLException exception) {
-            this.logs.severe("Error when getting pool connection !");
-            exception.printStackTrace();
-        }
-    }
-
-
-    /**
      * Execute an async callback to the connection
      *
      * @param query to execute
@@ -241,6 +215,33 @@ public class SQLConnection extends Driver<HikariDataSource> {
             }
         });
     }
+
+
+    /**
+     * Execute a query to the connection with callback result
+     *
+     * @param query to execute
+     * @param callback after response
+     * @param vars indefinite variable in the query
+     */
+    public void query(final String query, final Callback<ResultSet> callback, final Object... vars) {
+        try (Connection conn = this.connection.getConnection()) {
+            try (PreparedStatement ps = this.prepareStatement(conn, query, vars)) {
+                assert ps != null;
+                try (ResultSet rs = ps.executeQuery()) {
+                    callback.run(rs);
+                    this.closeRessources(rs, ps);
+                }
+            } catch (SQLException e) {
+                this.logs.severe("MySQL error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (SQLException exception) {
+            this.logs.severe("Error when getting pool connection !");
+            exception.printStackTrace();
+        }
+    }
+
 
     /**
      * Get main driver connection
