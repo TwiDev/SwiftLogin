@@ -24,7 +24,8 @@ import java.util.UUID;
 
 public class MojangManager {
 
-    public static final String MOJANG_API = "https://api.mojang.com/users/profiles/minecraft/%s";
+    //https://api.mojang.com/users/profiles/minecraft/%s
+    public static final String MOJANG_API = "https://api.minecraftservices.com/minecraft/profile/lookup/name/%s";
 
     private static final int READ_TIMEOUT = 8000;
     private static final int WRITE_TIMEOUT = 8000;
